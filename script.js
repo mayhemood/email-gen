@@ -204,32 +204,54 @@ $("copyHTML").addEventListener("click", () => {
 
 $("copyGmail").addEventListener("click", async () => {
 
-    const html = $("emailPreview").innerHTML;
+    const preview = $("emailPreview");
 
-    try{
+    try {
 
-        const blob = new Blob([html], {type:"text/html"});
+        // Modern rich clipboard
+        if (navigator.clipboard && window.ClipboardItem) {
 
-        const data = [
-            new ClipboardItem({
-                "text/html": blob
-            })
-        ];
+            const htmlBlob = new Blob(
+                [preview.innerHTML],
+                { type: "text/html" }
+            );
 
-        await navigator.clipboard.write(data);
+            const textBlob = new Blob(
+                [preview.innerText],
+                { type: "text/plain" }
+            );
 
-        alert("Email copied. Open Gmail and press Ctrl + V.");
+            await navigator.clipboard.write([
+                new ClipboardItem({
+                    "text/html": htmlBlob,
+                    "text/plain": textBlob
+                })
+            ]);
 
+            alert("Email copied. Paste into Gmail.");
+            return;
+        }
+
+    } catch(e) {
+        console.log("Clipboard API failed:", e);
     }
 
-    catch(err){
 
-        alert("Your browser doesn't support rich HTML clipboard. Use Chrome or Edge.");
+    // Mobile fallback
+    const range = document.createRange();
+    range.selectNodeContents(preview);
 
-    }
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    document.execCommand("copy");
+
+    selection.removeAllRanges();
+
+    alert("Email copied. Paste into Gmail.");
 
 });
-
 
 /* ===========================
    Download HTML
