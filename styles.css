@@ -1,0 +1,433 @@
+/* ===========================
+   Art by Dayyhu
+   Email Generator
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#F5F0F0;
+}
+
+/* ===========================
+   HEADER
+=========================== */
+
+.topbar{
+
+    height:75px;
+
+    background:#FFFFFF;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:0 35px;
+
+    border-bottom:2px solid #E8D5E8;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:100;
+
+}
+
+.logo{
+
+    font-size:26px;
+
+    font-weight:bold;
+
+}
+
+.title{
+
+    font-size:18px;
+
+    font-weight:bold;
+
+}
+
+
+/* ===========================
+   MAIN LAYOUT
+=========================== */
+
+.container{
+
+    display:grid;
+
+    grid-template-columns:420px 1fr;
+
+    gap:30px;
+
+    padding:30px;
+
+    align-items:start;
+
+}
+
+
+/* ===========================
+   LEFT PANEL
+=========================== */
+
+.left-panel{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:25px;
+
+}
+
+
+/* ===========================
+   RIGHT PANEL
+=========================== */
+
+.right-panel{
+
+    position:sticky;
+
+    top:100px;
+
+}
+
+
+/* ===========================
+   CARDS
+=========================== */
+
+.card{
+
+    background:#FFFFFF;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    border:1px solid #E8D5E8;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.05);
+
+}
+
+.card h2{
+
+    margin-bottom:20px;
+
+    color:#4B0082;
+
+    font-size:22px;
+
+}
+
+
+/* ===========================
+   LABELS
+=========================== */
+
+label{
+
+    display:block;
+
+    margin-top:15px;
+
+    margin-bottom:8px;
+
+    font-size:14px;
+
+    font-weight:bold;
+
+}
+
+
+/* ===========================
+   INPUTS
+=========================== */
+
+input,
+
+textarea,
+
+select{
+
+    width:100%;
+
+    padding:12px 15px;
+
+    border:1px solid #C8A2C8;
+
+    border-radius:10px;
+
+    outline:none;
+
+    background:#FFFFFF;
+
+    font-size:15px;
+
+    color:#4B0082;
+
+}
+
+input:focus,
+
+textarea:focus,
+
+select:focus{
+
+    border-color:#4B0082;
+
+    box-shadow:0 0 0 4px rgba(75,0,130,.10);
+
+}
+
+textarea{
+
+    resize:vertical;
+
+    min-height:120px;
+
+}
+
+
+/* ===========================
+   RADIO
+=========================== */
+
+.radio{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-top:10px;
+
+}
+
+.radio input{
+
+    width:auto;
+
+}
+
+
+/* ===========================
+   BUTTONS
+=========================== */
+
+button{
+
+    width:100%;
+
+    padding:14px;
+
+    margin-top:12px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#C8A2C8;
+
+    color:#4B0082;
+
+    font-size:15px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+button:hover{
+
+    background:#B78CB7;
+
+    transform:translateY(-2px);
+
+}
+
+
+/* ===========================
+   TABLES
+=========================== */
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+th{
+
+    text-align:left;
+
+    padding:10px;
+
+    background:#E8D5E8;
+
+}
+
+td{
+
+    padding:10px;
+
+}
+
+
+/* ===========================
+   PREVIEW
+=========================== */
+
+.preview-header{
+
+    margin-bottom:20px;
+
+}
+
+.preview-header h2{
+
+    font-size:28px;
+
+}
+
+.preview-header p{
+
+    color:#777;
+
+    margin-top:8px;
+
+}
+
+.preview-container{
+
+    background:#FFFFFF;
+
+    border-radius:18px;
+
+    padding:20px;
+
+    border:1px solid #E8D5E8;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.05);
+
+    overflow:auto;
+
+}
+
+
+/* ===========================
+   EMAIL PREVIEW SCALE
+=========================== */
+
+#emailPreview{
+
+    zoom:.82;
+
+}
+
+
+/* ===========================
+   SCROLLBAR
+=========================== */
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#C8A2C8;
+
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#F5F0F0;
+
+}
+
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:1200px){
+
+.container{
+
+grid-template-columns:1fr;
+
+}
+
+.right-panel{
+
+position:static;
+
+}
+
+#emailPreview{
+
+zoom:1;
+
+}
+
+}
+
+
+@media(max-width:700px){
+
+.topbar{
+
+flex-direction:column;
+
+height:auto;
+
+padding:20px;
+
+gap:10px;
+
+}
+
+.container{
+
+padding:15px;
+
+}
+
+.card{
+
+padding:20px;
+
+}
+
+button{
+
+font-size:14px;
+
+}
+
+}

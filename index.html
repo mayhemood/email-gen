@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Art by Dayyhu | Email Generator</title>
+
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+
+  <body
+    style="
+      margin: 0;
+      background: #f5f0f0;
+      font-family: Arial, Helvetica, sans-serif;
+    "
+  >
+    <!-- Header -->
+    <header class="topbar">
+      <div class="logo">💜 Art by Dayyhu</div>
+
+      <div class="title">Order Confirmation Email Generator</div>
+    </header>
+
+    <!-- Main Container -->
+
+    <main class="container">
+      <!-- LEFT PANEL -->
+
+      <section class="left-panel">
+        <!-- Order Information -->
+
+        <div class="card">
+          <h2>📋 Order Information</h2>
+
+          <label>Customer Name</label>
+          <input type="text" id="customerName" placeholder="Customer Name" />
+
+          <label>Order Number</label>
+          <input type="text" id="orderNumber" value="DAYYHU-000" />
+
+          <label>Order Date</label>
+          <input type="date" id="orderDate" />
+        </div>
+
+        <!-- Payment -->
+
+        <div class="card">
+          <h2>💳 Payment Method</h2>
+
+          <label class="radio">
+            <input
+              type="radio"
+              name="payment"
+              value="Cash on Delivery"
+              checked
+            />
+            Cash on Delivery
+          </label>
+
+          <label class="radio">
+            <input type="radio" name="payment" value="Prepaid" />
+            Prepaid
+          </label>
+        </div>
+
+        <!-- Pricing -->
+
+        <div class="card">
+          <h2>💰 Pricing</h2>
+
+          <label>Original Total</label>
+          <input type="number" id="originalTotal" />
+
+          <label>Discount</label>
+          <input type="number" id="discount" value="0" />
+
+          <label>Subtotal</label>
+          <input type="number" id="subtotal" />
+
+          <label>Delivery Charges</label>
+          <input type="number" id="delivery" value="399" />
+
+          <label>Total Amount</label>
+          <input type="number" id="totalAmount" readonly />
+        </div>
+
+        <!-- Shipping -->
+
+        <div class="card">
+          <h2>🚚 Shipping</h2>
+
+          <label>Tracking Number</label>
+          <input type="text" id="trackingNumber" />
+
+          <label>Tracking Link</label>
+          <input type="url" id="trackingLink" />
+
+          <button id="generateTracking">Generate Leopards Link</button>
+
+          <label>Shipping Address</label>
+
+          <textarea
+            id="shippingAddress"
+            rows="5"
+            placeholder="House #123, DHA Phase 6, Karachi"
+          ></textarea>
+        </div>
+
+        <!-- Actions -->
+
+        <div class="card">
+          <h2>⚡ Actions</h2>
+
+          <button id="previewBtn">👀 Preview</button>
+
+          <button id="copyGmail">📋 Copy for Gmail</button>
+
+          <button id="copyHTML">📄 Copy HTML</button>
+
+          <button id="downloadHTML">💾 Download HTML</button>
+
+          <button id="saveOrder">💽 Save Order</button>
+
+          <button id="loadOrder">📂 Load Order</button>
+
+          <button id="resetForm">🗑 Reset</button>
+        </div>
+      </section>
+
+      <section class="right-panel">
+        <div class="preview-header">
+          <h2>📧 Live Email Preview</h2>
+          <p>This is exactly what your customer will receive.</p>
+        </div>
+
+        <div id="emailPreview" class="preview-container">
+          <table
+            width="100%"
+            cellpadding="0"
+            cellspacing="0"
+            style="background: #f5f0f0; padding: 20px"
+          >
+            <tr>
+              <td align="center">
+                <table
+                  role="presentation"
+                  width="650"
+                  cellpadding="0"
+                  cellspacing="0"
+                  style="
+                    background: #fff;
+                    border-radius: 16px;
+                    overflow: hidden;
+                  "
+                >
+                  <tr>
+                    <td
+                      align="center"
+                      style="
+                        padding: 40px;
+                        background: linear-gradient(135deg, #4b0082, #7b3fb7);
+                        color: #fff;
+                      "
+                    >
+                      <h1 style="margin: 0; font-size: 34px">Art by Dayyhu</h1>
+                      <p style="margin: 10px 0 0">💜 Order Confirmed</p>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td style="padding: 40px">
+                      <p style="font-size: 16px; color: #555">
+                        Hello <strong id="pCustomerName">Customer Name</strong>,
+                      </p>
+
+                      <p
+                        style="font-size: 16px; line-height: 28px; color: #555"
+                      >
+                        Thank you for choosing <strong>Art by Dayyhu</strong>.
+                        You will receive your artwork shortly.
+                      </p>
+
+                      <!-- Order Summary -->
+
+                      <div
+                        style="
+                          background: #faf7fc;
+                          border: 1px solid #e8d5e8;
+                          border-radius: 14px;
+                          padding: 25px;
+                          margin-bottom: 25px;
+                        "
+                      >
+                        <h2 style="margin-top: 0; color: #4b0082">
+                          🛍 Order Summary
+                        </h2>
+
+                        <table
+                          width="100%"
+                          cellpadding="8"
+                          cellspacing="0"
+                          style="border-collapse: collapse"
+                        >
+                          <tr>
+                            <td style="color: #555">Order Number</td>
+                            <td align="right">
+                              <strong id="pOrderNumber" style="color: #555">
+                                DAYYHU-00001
+                              </strong>
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td style="color: #555">Order Date</td>
+                            <td
+                              align="right"
+                              id="pOrderDate"
+                              style="color: #555"
+                            >
+                              17 Jul 2026
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td style="color: #555">Original Total</td>
+                            <td
+                              align="right"
+                              id="pOriginal"
+                              style="color: #555"
+                            >
+                              Rs. 5,000
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td style="color: #555">Discount</td>
+                            <td
+                              align="right"
+                              id="pDiscount"
+                              style="color: #ffb7c5; font-weight: bold"
+                            >
+                              − Rs. 2,000
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td style="color: #555">
+                              <strong>Subtotal</strong>
+                            </td>
+                            <td align="right">
+                              <strong id="pSubtotal" style="color: #555">
+                                Rs. 3,000
+                              </strong>
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td style="color: #555">Delivery Charges</td>
+                            <td
+                              align="right"
+                              id="pDelivery"
+                              style="color: #555"
+                            >
+                              Rs. 399
+                            </td>
+                          </tr>
+                        </table>
+
+                        <div
+                          style="
+                            margin-top: 20px;
+                            background: #efe3f6;
+                            border-left: 6px solid #4b0082;
+                            padding: 18px;
+                            border-radius: 10px;
+                          "
+                        >
+                          <table width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                              <td style="vertical-align: top">
+                                <div
+                                  style="
+                                    font-size: 22px;
+                                    color: #4b0082;
+                                    font-weight: bold;
+                                  "
+                                >
+                                  Total Amount
+                                </div>
+
+                                <div style="margin-top: 10px">
+                                  <span
+                                    id="pPayment"
+                                    style="
+                                      display: inline-block;
+                                      background: #faf7fc;
+                                      color: #4b0082;
+                                      padding: 8px 16px;
+                                      border-radius: 18px;
+                                      font-size: 14px;
+                                      font-weight: bold;
+                                      border: 1px solid #e8d5e8;
+                                    "
+                                  >
+                                    💵 Cash on Delivery
+                                  </span>
+                                </div>
+                              </td>
+
+                              <td align="right" style="vertical-align: middle">
+                                <div
+                                  id="pTotal"
+                                  style="
+                                    font-size: 30px;
+                                    font-weight: bold;
+                                    color: #4b0082;
+                                  "
+                                >
+                                  Rs. 0
+                                </div>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+
+                      <!-- Shipping -->
+
+                      <div
+                        style="
+                          background: #faf7fc;
+                          border: 1px solid #e8d5e8;
+                          border-radius: 14px;
+                          padding: 25px;
+                          margin-bottom: 25px;
+                        "
+                      >
+                        <h2 style="margin-top: 0; color: #4b0082">
+                          🚚 Shipping Information
+                        </h2>
+
+                        <table width="100%" cellpadding="8">
+                          <tr>
+                            <td>Shipping Address</td>
+                            <td align="right" id="pAddress">
+                              Customer Address
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td>Courier</td>
+                            <td align="right">
+                              <strong>Leopards Courier</strong>
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td>Tracking Number</td>
+                            <td
+                              align="right"
+                              id="pTracking"
+                              style="
+                                font-size: 18px;
+                                color: #4b0082;
+                                font-weight: bold;
+                              "
+                            >
+                              GW7538722924
+                            </td>
+                          </tr>
+                        </table>
+
+                        <p style="text-align: center; margin-top: 25px">
+                          <a
+                            id="pTrackingLink"
+                            href="#"
+                            style="
+                              background: #4b0082;
+                              color: #fff;
+                              text-decoration: none;
+                              padding: 16px 34px;
+                              border-radius: 28px;
+                              font-weight: bold;
+                            "
+                          >
+                            📦 Track Shipment
+                          </a>
+                        </p>
+                      </div>
+
+                      <!-- Progress -->
+
+                      <div
+                        style="
+                          background: #faf7fc;
+                          border: 1px solid #e8d5e8;
+                          border-radius: 14px;
+                          padding: 25px;
+                        "
+                      >
+                        <h2 style="margin-top: 0; color: #4b0082">
+                          📦 Order Progress
+                        </h2>
+
+                        <p
+                          style="
+                            font-size: 16px;
+                            line-height: 32px;
+                            color: #555;
+                            margin-bottom: 0;
+                          "
+                        >
+                          ✅ Artwork handcrafted<br />
+
+                          ✅ Quality inspection completed<br />
+
+                          ✅ Securely packed<br />
+
+                          🟡 Awaiting pickup by Leopards Courier
+                        </p>
+                      </div>
+                      <div
+                        style="
+                          background: #f8f2fb;
+                          padding: 22px;
+                          border-radius: 10px;
+                          text-align: center;
+                          color: #555;
+                          margin-top: 30px;
+                        "
+                      >
+                        <h3 style="margin-top: 0; color: #4b0082">
+                          Thank You 💜
+                        </h3>
+                        <p>
+                          Every order is crafted with love and care. We can't
+                          wait for you to receive your artwork.
+                        </p>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- Footer -->
+
+                  <tr>
+                    <td
+                      align="center"
+                      style="background: #4b0082; padding: 40px; color: #fff"
+                    >
+                      <h2 style="margin: 0">Made with 💜 by Dayyhu</h2>
+                      <p style="color: #e8ddf3">Art by Heart</p>
+                      <p>
+                        <a
+                          href="https://instagram.com/bydayyhu"
+                          style="color: #fff; text-decoration: none"
+                          >Instagram</a
+                        >
+                        &nbsp; • &nbsp;
+                        <a
+                          href="https://wa.me/+923428318182"
+                          style="color: #fff; text-decoration: none"
+                          >WhatsApp</a
+                        >
+                        &nbsp; • &nbsp;
+                        <a
+                          href="https://dayyhu.com"
+                          style="color: #fff; text-decoration: none"
+                          >Website</a
+                        >
+                      </p>
+                      <p style="color: #e8ddf3; font-size: 14px">
+                        Need help? Simply reply to this email.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
