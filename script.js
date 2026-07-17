@@ -90,41 +90,6 @@ function calculateTotals(){
 
 }
 
-
-/* ---------------------------
-   Tracking
---------------------------- */
-
-function generateTracking(){
-
-    let tracking =
-        $("trackingNumber").value;
-
-    $("trackingLink").value =
-        "https://leopardsfulfillment.leopardscourier.com/Track/Index?Cn=" +
-        tracking;
-
-}
-
-
-$("trackingNumber").addEventListener("input",()=>{
-
-    generateTracking();
-
-    updatePreview();
-
-});
-
-
-$("generateTracking").addEventListener("click",(e)=>{
-
-    e.preventDefault();
-
-    generateTracking();
-
-});
-
-
 /* ---------------------------
    Live Preview
 --------------------------- */
