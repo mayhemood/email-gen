@@ -70,20 +70,37 @@
         <div class="card">
           <h2>💰 Pricing</h2>
 
-          <label>Original Total</label>
-          <input type="number" id="originalTotal" />
+          <div id="itemsContainer">
+            <div class="item">
+              <label>Item Name</label>
+              <input
+                type="text"
+                class="itemName"
+                placeholder="e.g. Handmade Canvas 8×8"
+              />
 
-          <label>Discount</label>
-          <input type="number" id="discount" value="0" />
+              <label>Original Price</label>
+              <input type="number" class="itemOriginal" />
 
-          <label>Subtotal</label>
-          <input type="number" id="subtotal" />
+              <label>Discounted Price</label>
+              <input type="number" class="itemDiscounted" />
+
+              <hr
+                style="
+                  margin: 20px 0;
+                  border: none;
+                  border-top: 1px solid #e8d5e8;
+                "
+              />
+            </div>
+          </div>
+
+          <button type="button" id="addItem">+ Add Item</button>
+
+          <br /><br />
 
           <label>Delivery Charges</label>
           <input type="number" id="delivery" value="399" />
-
-          <label>Total Amount</label>
-          <input type="number" id="totalAmount" readonly />
         </div>
 
         <!-- Shipping -->
@@ -225,13 +242,33 @@
                           </tr>
 
                           <tr>
+                            <td
+                              colspan="2"
+                              style="padding-top: 18px; padding-bottom: 8px"
+                            >
+                              <strong style="color: #4b0082">Items</strong>
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td colspan="2">
+                              <table
+                                id="pItems"
+                                width="100%"
+                                cellpadding="8"
+                                cellspacing="0"
+                              ></table>
+                            </td>
+                          </tr>
+
+                          <tr>
                             <td style="color: #555">Original Total</td>
                             <td
                               align="right"
                               id="pOriginal"
                               style="color: #555"
                             >
-                              Rs. 5,000
+                              Rs. 0
                             </td>
                           </tr>
 
@@ -242,7 +279,7 @@
                               id="pDiscount"
                               style="color: #ffb7c5; font-weight: bold"
                             >
-                              − Rs. 2,000
+                              - Rs. 0
                             </td>
                           </tr>
 
@@ -252,7 +289,7 @@
                             </td>
                             <td align="right">
                               <strong id="pSubtotal" style="color: #555">
-                                Rs. 3,000
+                                Rs. 0
                               </strong>
                             </td>
                           </tr>
