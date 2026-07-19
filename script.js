@@ -183,7 +183,7 @@ function updatePreview() {
 
     html += `
         <tr>
-            <td style="color:##4B0082;padding-top:10px;">
+            <td style="color:#555;padding-top:10px;">
                 <strong>${count}.</strong> ${name}
             </td>
 
