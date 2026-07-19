@@ -10,32 +10,23 @@ const $ = (id) => document.getElementById(id);
 --------------------------- */
 
 window.onload = () => {
+  // Today's Date
 
-    // Today's Date
+  const today = new Date();
+  $("orderDate").value = today.toISOString().split("T")[0];
 
-    const today = new Date(); 
-    $("orderDate").value = today.toISOString().split("T")[0];
+  // Order Number
 
-    // Order Number
+  let last = localStorage.getItem("lastOrder");
 
-    let last = localStorage.getItem("lastOrder");
+  if (!last) last = 1;
 
-    if (!last)
-        last = 1;
+  $("orderNumber").value = "DAYYHU-" + String(last).padStart(4, "0");
 
-    $("orderNumber").value =
-        "DAYYHU-" + String(last).padStart(4, "0");
+  // Initial Preview
 
-    // Default Tracking
-
-    generateTracking();
-
-    // Initial Preview
-
-    updatePreview();
-
-}
-
+  updatePreview();
+};
 
 /* ---------------------------
    Inputs
@@ -43,109 +34,185 @@ window.onload = () => {
 
 const inputs = document.querySelectorAll("input, textarea");
 
-inputs.forEach(input => {
+inputs.forEach((input) => {
+  input.addEventListener("input", () => {
+    calculateTotals();
 
-    input.addEventListener("input", () => {
-
-        calculateTotals();
-
-        updatePreview();
-
-    });
-
+    updatePreview();
+  });
 });
 
-
-document.querySelectorAll("input[name='payment']").forEach(radio => {
-
-    radio.addEventListener("change", updatePreview);
-
+document.querySelectorAll("input[name='payment']").forEach((radio) => {
+  radio.addEventListener("change", updatePreview);
 });
-
 
 /* ---------------------------
    Pricing
 --------------------------- */
 
-function calculateTotals(){
+$("addItem").addEventListener("click", () => {
+  const div = document.createElement("div");
 
-    let original =
-        Number($("originalTotal").value) || 0;
+  div.className = "item";
 
-    let discount =
-        Number($("discount").value) || 0;
+  div.innerHTML = `
 
-    let delivery =
-        Number($("delivery").value) || 0;
+        <label>Item Name</label>
+        <input type="text" class="itemName">
 
-    let subtotal =
-        original - discount;
+        <label>Original Price</label>
+        <input type="number" class="itemOriginal">
 
-    let total =
-        subtotal + delivery;
+        <label>Discounted Price</label>
+        <input type="number" class="itemDiscounted">
 
-    $("subtotal").value = subtotal;
+        <button
+            type="button"
+            class="removeItem"
+            style="margin-top:10px;background:#FFB7C5;color:white;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;">
 
-    $("totalAmount").value = total;
+            Remove Item
 
+        </button>
+
+    `;
+
+  $("itemsContainer").appendChild(div);
+
+  div.querySelectorAll("input").forEach((input) => {
+    input.addEventListener("input", () => {
+      calculateTotals();
+      updatePreview();
+    });
+  });
+});
+
+document.querySelectorAll(".item input").forEach((input) => {
+  input.addEventListener("input", () => {
+    calculateTotals();
+    updatePreview();
+  });
+});
+
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("removeItem")) {
+    e.target.closest(".item").remove();
+
+    calculateTotals();
+    updatePreview();
+  }
+});
+
+function calculateTotals() {
+  const originals = document.querySelectorAll(".itemOriginal");
+  const discounted = document.querySelectorAll(".itemDiscounted");
+
+  let originalTotal = 0;
+  let subtotal = 0;
+
+  originals.forEach((input) => {
+    originalTotal += Number(input.value) || 0;
+  });
+
+  discounted.forEach((input) => {
+    subtotal += Number(input.value) || 0;
+  });
+
+  const discount = originalTotal - subtotal;
+
+  const delivery = Number($("delivery").value) || 0;
+
+  const total = subtotal + delivery;
+
+  // Update preview
+  $("pOriginal").innerText = "Rs. " + originalTotal.toLocaleString();
+
+  $("pDiscount").innerText = "- Rs. " + discount.toLocaleString();
+
+  $("pSubtotal").innerText = "Rs. " + subtotal.toLocaleString();
+
+  if (delivery === 0) {
+    $("pDelivery").innerText = "Free Shipping";
+    $("pDelivery").style.color = "#FFB7C5";
+    $("pDelivery").style.fontWeight = "bold";
+  } else {
+    $("pDelivery").innerText = "Rs. " + delivery.toLocaleString();
+
+    $("pDelivery").style.color = "#555";
+    $("pDelivery").style.fontWeight = "normal";
+  }
+
+  $("pTotal").innerText = "Rs. " + total.toLocaleString();
 }
 
 /* ---------------------------
    Live Preview
 --------------------------- */
 
-function updatePreview(){
+function updatePreview() {
+  $("pCustomerName").innerText = $("customerName").value || "Customer Name";
 
-    $("pCustomerName").innerText =
-        $("customerName").value || "Customer";
+  $("pOrderNumber").innerText = $("orderNumber").value || "DAYYHU-000";
 
-    $("pOrderNumber").innerText =
-        $("orderNumber").value;
+  $("pOrderDate").innerText = $("orderDate").value || "";
 
-    $("pOrderDate").innerText =
-        $("orderDate").value;
+  $("pTracking").innerText = $("trackingNumber").value || "";
 
-    $("pOriginal").innerText =
-        "Rs. " + ($("originalTotal").value || 0);
+  $("pAddress").innerText = $("shippingAddress").value || "";
 
-    $("pDiscount").innerText =
-        "- Rs. " + ($("discount").value || 0);
+  const payment = document.querySelector('input[name="payment"]:checked');
 
-    $("pSubtotal").innerText =
-        "Rs. " + ($("subtotal").value || 0);
+  $("pPayment").innerText =
+    payment.value === "Prepaid" ? "💳 Prepaid" : "💵 Cash on Delivery";
 
-    $("pDelivery").innerText =
-        "Rs. " + ($("delivery").value || 0);
+  const names = document.querySelectorAll(".itemName");
+  const originals = document.querySelectorAll(".itemOriginal");
+  const discounted = document.querySelectorAll(".itemDiscounted");
 
-    $("pTotal").innerText =
-        "Rs. " + ($("totalAmount").value || 0);
+  let html = "";
 
-    $("pTracking").innerText =
-        $("trackingNumber").value;
+  console.log(names.length);
+  console.log(names);
 
-    $("pAddress").innerHTML =
-        $("shippingAddress").value.replace(/\n/g,"<br>");
+  for (let i = 0; i < names.length; i++) {
+    const name = names[i].value.trim();
 
-    $("pTrackingLink").href =
-        $("trackingLink").value;
+    const original = Number(originals[i].value) || 0;
 
-    const payment =
-        document.querySelector("input[name='payment']:checked").value;
+    const sale = Number(discounted[i].value) || 0;
 
-    if(payment==="Prepaid"){
+    if (name === "" && original === 0 && sale === 0) continue;
 
-        $("pPayment").innerHTML =
-        "✅ Prepaid";
+    html += `
+        <tr>
+            <td style="color:#555;padding-top:10px;">
+                ${name}
+            </td>
 
-    }
+            <td align="right" style="color:#555;padding-top:10px;">
+                <span style="text-decoration:line-through;color:#999;">
+                    Rs. ${original.toLocaleString()}
+                </span>
+                <br>
+                <strong style="color:#555;">
+                    Rs. ${sale.toLocaleString()}
+                </strong>
+            </td>
+        </tr>
+    `;
+  }
 
-    else{
+  $("pItems").innerHTML = html;
+  console.log(html);
 
-        $("pPayment").innerHTML =
-        "💵 Cash on Delivery";
+  console.log("updatePreview called");
 
-    }
-
+  console.log($("customerName"));
+  console.log($("orderNumber"));
+  console.log($("orderDate"));
+  console.log($("trackingNumber"));
+  console.log($("shippingAddress"));
+  console.log($("paymentMethod"));
 }
 
 /* ===========================
@@ -153,69 +220,54 @@ function updatePreview(){
 =========================== */
 
 $("copyHTML").addEventListener("click", () => {
+  const html = $("emailPreview").innerHTML;
 
-    const html = $("emailPreview").innerHTML;
+  navigator.clipboard.writeText(html);
 
-    navigator.clipboard.writeText(html);
-
-    alert("HTML copied to clipboard.");
-
+  alert("HTML copied to clipboard.");
 });
-
 
 /* ===========================
    Copy for Gmail
 =========================== */
 
 $("copyGmail").addEventListener("click", async () => {
+  const preview = $("emailPreview");
 
-    const preview = $("emailPreview");
+  try {
+    // Modern rich clipboard
+    if (navigator.clipboard && window.ClipboardItem) {
+      const htmlBlob = new Blob([preview.innerHTML], { type: "text/html" });
 
-    try {
+      const textBlob = new Blob([preview.innerText], { type: "text/plain" });
 
-        // Modern rich clipboard
-        if (navigator.clipboard && window.ClipboardItem) {
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          "text/html": htmlBlob,
+          "text/plain": textBlob,
+        }),
+      ]);
 
-            const htmlBlob = new Blob(
-                [preview.innerHTML],
-                { type: "text/html" }
-            );
-
-            const textBlob = new Blob(
-                [preview.innerText],
-                { type: "text/plain" }
-            );
-
-            await navigator.clipboard.write([
-                new ClipboardItem({
-                    "text/html": htmlBlob,
-                    "text/plain": textBlob
-                })
-            ]);
-
-            alert("Email copied. Paste into Gmail.");
-            return;
-        }
-
-    } catch(e) {
-        console.log("Clipboard API failed:", e);
+      alert("Email copied. Paste into Gmail.");
+      return;
     }
+  } catch (e) {
+    console.log("Clipboard API failed:", e);
+  }
 
+  // Mobile fallback
+  const range = document.createRange();
+  range.selectNodeContents(preview);
 
-    // Mobile fallback
-    const range = document.createRange();
-    range.selectNodeContents(preview);
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
 
-    const selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
+  document.execCommand("copy");
 
-    document.execCommand("copy");
+  selection.removeAllRanges();
 
-    selection.removeAllRanges();
-
-    alert("Email copied. Paste into Gmail.");
-
+  alert("Email copied. Paste into Gmail.");
 });
 
 /* ===========================
@@ -223,9 +275,7 @@ $("copyGmail").addEventListener("click", async () => {
 =========================== */
 
 $("downloadHTML").addEventListener("click", () => {
-
-    const html =
-`<!DOCTYPE html>
+  const html = `<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -236,225 +286,167 @@ ${$("emailPreview").innerHTML}
 </body>
 </html>`;
 
-    const blob =
-        new Blob([html],{type:"text/html"});
+  const blob = new Blob([html], { type: "text/html" });
 
-    const url =
-        URL.createObjectURL(blob);
+  const url = URL.createObjectURL(blob);
 
-    const a =
-        document.createElement("a");
+  const a = document.createElement("a");
 
-    a.href = url;
+  a.href = url;
 
-    a.download =
-        $("orderNumber").value + ".html";
+  a.download = $("orderNumber").value + ".html";
 
-    a.click();
+  a.click();
 
-    URL.revokeObjectURL(url);
-
+  URL.revokeObjectURL(url);
 });
-
 
 /* ===========================
    Save Order
 =========================== */
 
-$("saveOrder").addEventListener("click",()=>{
+$("saveOrder").addEventListener("click", () => {
+  const order = {
+    customerName: $("customerName").value,
 
-    const order = {
+    orderNumber: $("orderNumber").value,
 
-        customerName:
-            $("customerName").value,
+    orderDate: $("orderDate").value,
 
-        orderNumber:
-            $("orderNumber").value,
+    originalTotal: $("originalTotal").value,
 
-        orderDate:
-            $("orderDate").value,
+    discount: $("discount").value,
 
-        originalTotal:
-            $("originalTotal").value,
+    subtotal: $("subtotal").value,
 
-        discount:
-            $("discount").value,
+    delivery: $("delivery").value,
 
-        subtotal:
-            $("subtotal").value,
+    total: $("totalAmount").value,
 
-        delivery:
-            $("delivery").value,
+    trackingNumber: $("trackingNumber").value,
 
-        total:
-            $("totalAmount").value,
+    trackingLink: $("trackingLink").value,
 
-        trackingNumber:
-            $("trackingNumber").value,
+    shippingAddress: $("shippingAddress").value,
 
-        trackingLink:
-            $("trackingLink").value,
+    payment: document.querySelector("input[name='payment']:checked").value,
+  };
 
-        shippingAddress:
-            $("shippingAddress").value,
+  const blob = new Blob([JSON.stringify(order, null, 4)], {
+    type: "application/json",
+  });
 
-        payment:
-            document.querySelector("input[name='payment']:checked").value
+  const url = URL.createObjectURL(blob);
 
-    };
+  const a = document.createElement("a");
 
-    const blob =
-        new Blob(
-            [JSON.stringify(order,null,4)],
-            {type:"application/json"}
-        );
+  a.href = url;
 
-    const url =
-        URL.createObjectURL(blob);
+  a.download = order.orderNumber + ".json";
 
-    const a =
-        document.createElement("a");
+  a.click();
 
-    a.href = url;
+  URL.revokeObjectURL(url);
 
-    a.download =
-        order.orderNumber + ".json";
+  /* Increment Order Number */
 
-    a.click();
+  let current = parseInt(order.orderNumber.replace("DAYYHU-", ""));
 
-    URL.revokeObjectURL(url);
+  current++;
 
-    /* Increment Order Number */
-
-    let current =
-        parseInt(order.orderNumber.replace("DAYYHU-",""));
-
-    current++;
-
-    localStorage.setItem("lastOrder",current);
-
+  localStorage.setItem("lastOrder", current);
 });
-
 
 /* ===========================
    Load Order
 =========================== */
 
-$("loadOrder").addEventListener("click",()=>{
+$("loadOrder").addEventListener("click", () => {
+  const input = document.createElement("input");
 
-    const input =
-        document.createElement("input");
+  input.type = "file";
 
-    input.type="file";
+  input.accept = ".json";
 
-    input.accept=".json";
+  input.onchange = (e) => {
+    const file = e.target.files[0];
 
-    input.onchange = e=>{
+    const reader = new FileReader();
 
-        const file =
-            e.target.files[0];
+    reader.onload = () => {
+      const order = JSON.parse(reader.result);
 
-        const reader =
-            new FileReader();
+      $("customerName").value = order.customerName;
 
-        reader.onload = ()=>{
+      $("orderNumber").value = order.orderNumber;
 
-            const order =
-                JSON.parse(reader.result);
+      $("orderDate").value = order.orderDate;
 
-            $("customerName").value =
-                order.customerName;
+      $("originalTotal").value = order.originalTotal;
 
-            $("orderNumber").value =
-                order.orderNumber;
+      $("discount").value = order.discount;
 
-            $("orderDate").value =
-                order.orderDate;
+      $("subtotal").value = order.subtotal;
 
-            $("originalTotal").value =
-                order.originalTotal;
+      $("delivery").value = order.delivery;
 
-            $("discount").value =
-                order.discount;
+      $("totalAmount").value = order.total;
 
-            $("subtotal").value =
-                order.subtotal;
+      $("trackingNumber").value = order.trackingNumber;
 
-            $("delivery").value =
-                order.delivery;
+      $("trackingLink").value = order.trackingLink;
 
-            $("totalAmount").value =
-                order.total;
+      $("shippingAddress").value = order.shippingAddress;
 
-            $("trackingNumber").value =
-                order.trackingNumber;
+      document.querySelector(
+        `input[name='payment'][value='${order.payment}']`,
+      ).checked = true;
 
-            $("trackingLink").value =
-                order.trackingLink;
+      calculateTotals();
 
-            $("shippingAddress").value =
-                order.shippingAddress;
-
-            document.querySelector(
-                `input[name='payment'][value='${order.payment}']`
-            ).checked = true;
-
-            calculateTotals();
-
-            updatePreview();
-
-        };
-
-        reader.readAsText(file);
-
+      updatePreview();
     };
 
-    input.click();
+    reader.readAsText(file);
+  };
 
+  input.click();
 });
-
 
 /* ===========================
    Reset
 =========================== */
 
-$("resetForm").addEventListener("click",()=>{
+$("resetForm").addEventListener("click", () => {
+  if (!confirm("Reset this order?")) return;
 
-    if(!confirm("Reset this order?"))
-        return;
+  document
+    .querySelectorAll("input[type='text'], input[type='number'], textarea")
+    .forEach((i) => {
+      if (i.id === "orderNumber") return;
 
-    document.querySelectorAll("input[type='text'], input[type='number'], textarea")
-    .forEach(i=>{
+      if (i.id === "trackingLink") return;
 
-        if(i.id==="orderNumber")
-            return;
-
-        if(i.id==="trackingLink")
-            return;
-
-        i.value="";
-
+      i.value = "";
     });
 
-    $("discount").value=0;
+  $("discount").value = 0;
 
-    $("delivery").value=399;
+  $("delivery").value = 399;
 
-    $("originalTotal").value="";
+  $("originalTotal").value = "";
 
-    const today =
-        new Date().toISOString().split("T")[0];
+  const today = new Date().toISOString().split("T")[0];
 
-    $("orderDate").value=today;
+  $("orderDate").value = today;
 
-    document.querySelector("input[value='Cash on Delivery']").checked=true;
+  document.querySelector("input[value='Cash on Delivery']").checked = true;
 
-    calculateTotals();
+  calculateTotals();
 
-    generateTracking();
+  generateTracking();
 
-    updatePreview();
-
+  updatePreview();
 });
 
 /* ===========================
@@ -462,150 +454,111 @@ $("resetForm").addEventListener("click",()=>{
 =========================== */
 
 const fields = [
-    "customerName",
-    "orderNumber",
-    "orderDate",
-    "originalTotal",
-    "discount",
-    "subtotal",
-    "delivery",
-    "totalAmount",
-    "trackingNumber",
-    "trackingLink",
-    "shippingAddress"
+  "customerName",
+  "orderNumber",
+  "orderDate",
+  "originalTotal",
+  "discount",
+  "subtotal",
+  "delivery",
+  "totalAmount",
+  "trackingNumber",
+  "trackingLink",
+  "shippingAddress",
 ];
 
-function saveDraft(){
+function saveDraft() {
+  const draft = {};
 
-    const draft = {};
+  fields.forEach((id) => {
+    draft[id] = $(id).value;
+  });
 
-    fields.forEach(id=>{
-        draft[id] = $(id).value;
-    });
+  draft.payment = document.querySelector("input[name='payment']:checked").value;
 
-    draft.payment =
-        document.querySelector("input[name='payment']:checked").value;
-
-    localStorage.setItem(
-        "dayyhuDraft",
-        JSON.stringify(draft)
-    );
-
+  localStorage.setItem("dayyhuDraft", JSON.stringify(draft));
 }
-
 
 /* ===========================
    Restore Draft
 =========================== */
 
-function loadDraft(){
+function loadDraft() {
+  const draft = localStorage.getItem("dayyhuDraft");
 
-    const draft =
-        localStorage.getItem("dayyhuDraft");
+  if (!draft) return;
 
-    if(!draft)
-        return;
+  const data = JSON.parse(draft);
 
-    const data =
-        JSON.parse(draft);
+  fields.forEach((id) => {
+    if (data[id] !== undefined) {
+      $(id).value = data[id];
+    }
+  });
 
-    fields.forEach(id=>{
+  document
+    .querySelector(`input[name='payment'][value='${data.payment}']`)
+    ?.click();
 
-        if(data[id]!==undefined){
+  calculateTotals();
 
-            $(id).value = data[id];
+  generateTracking();
 
-        }
-
-    });
-
-    document.querySelector(
-        `input[name='payment'][value='${data.payment}']`
-    )?.click();
-
-    calculateTotals();
-
-    generateTracking();
-
-    updatePreview();
-
+  updatePreview();
 }
 
 loadDraft();
 
-setInterval(saveDraft,1000);
-
+setInterval(saveDraft, 1000);
 
 /* ===========================
    Next Order Number
 =========================== */
 
-function generateNextOrder(){
+function generateNextOrder() {
+  let last = Number(localStorage.getItem("lastOrder")) || 1;
 
-    let last =
-        Number(localStorage.getItem("lastOrder")) || 1;
-
-    $("orderNumber").value =
-        "DAYYHU-" +
-        String(last).padStart(5,"0");
-
+  $("orderNumber").value = "DAYYHU-" + String(last).padStart(5, "0");
 }
 
 generateNextOrder();
 
-$("saveOrder").addEventListener("click",()=>{
+$("saveOrder").addEventListener("click", () => {
+  let last = Number(localStorage.getItem("lastOrder")) || 1;
 
-    let last =
-        Number(localStorage.getItem("lastOrder")) || 1;
+  last++;
 
-    last++;
+  localStorage.setItem("lastOrder", last);
 
-    localStorage.setItem(
-        "lastOrder",
-        last
-    );
-
-    generateNextOrder();
-
+  generateNextOrder();
 });
-
 
 /* ===========================
    Ctrl + S
 =========================== */
 
-document.addEventListener("keydown",e=>{
+document.addEventListener("keydown", (e) => {
+  if (e.ctrlKey && e.key === "s") {
+    e.preventDefault();
 
-    if(e.ctrlKey && e.key==="s"){
-
-        e.preventDefault();
-
-        $("downloadHTML").click();
-
-    }
-
+    $("downloadHTML").click();
+  }
 });
-
 
 /* ===========================
    Live Preview
 =========================== */
 
-setInterval(()=>{
+setInterval(() => {
+  calculateTotals();
 
-    calculateTotals();
-
-    updatePreview();
-
-},500);
-
+  updatePreview();
+}, 500);
 
 /* ===========================
    Clear Draft after Save
 =========================== */
 
-$("saveOrder").addEventListener("click",()=>{
-
-    localStorage.removeItem("dayyhuDraft");
-
+$("saveOrder").addEventListener("click", () => {
+  localStorage.removeItem("dayyhuDraft");
 });
