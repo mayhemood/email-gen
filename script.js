@@ -170,23 +170,21 @@ function updatePreview() {
   const discounted = document.querySelectorAll(".itemDiscounted");
 
   let html = "";
-
-  console.log(names.length);
-  console.log(names);
+  let count = 0;
 
   for (let i = 0; i < names.length; i++) {
     const name = names[i].value.trim();
-
     const original = Number(originals[i].value) || 0;
-
     const sale = Number(discounted[i].value) || 0;
 
     if (name === "" && original === 0 && sale === 0) continue;
 
+    count++;
+
     html += `
         <tr>
             <td style="color:#555;padding-top:10px;">
-                ${name}
+                <strong>${count}.</strong> ${name}
             </td>
 
             <td align="right" style="color:#555;padding-top:10px;">
@@ -194,7 +192,7 @@ function updatePreview() {
                     Rs. ${original.toLocaleString()}
                 </span>
                 <br>
-                <strong style="color:#555;">
+                <strong style="color:#4B0082;">
                     Rs. ${sale.toLocaleString()}
                 </strong>
             </td>
@@ -202,17 +200,8 @@ function updatePreview() {
     `;
   }
 
+  $("pItemsHeading").innerText = `Items (${count})`;
   $("pItems").innerHTML = html;
-  console.log(html);
-
-  console.log("updatePreview called");
-
-  console.log($("customerName"));
-  console.log($("orderNumber"));
-  console.log($("orderDate"));
-  console.log($("trackingNumber"));
-  console.log($("shippingAddress"));
-  console.log($("paymentMethod"));
 }
 
 /* ===========================
