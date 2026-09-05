@@ -552,13 +552,15 @@ $("saveOrder").addEventListener("click", () => {
   localStorage.removeItem("dayyhuDraft");
 });
 
-const trackingNumber = document
-    .getElementById("pTracking")
-    .textContent
-    .trim();
+document.addEventListener("DOMContentLoaded", () => {
+  const trackingElement = document.getElementById("pTracking");
+  const trackingLinkElement = document.getElementById("pTrackingLink");
 
-  const trackingLink =
-    "https://pk.leopardscourier.com/tracking?cn_number=" +
-    encodeURIComponent(trackingNumber);
+  if (trackingElement && trackingLinkElement) {
+    const trackingNumber = trackingElement.textContent.trim();
 
-  document.getElementById("pTrackingLink").href = trackingLink;
+    trackingLinkElement.href =
+      "https://pk.leopardscourier.com/tracking?cn_number=" +
+      encodeURIComponent(trackingNumber);
+  }
+});
