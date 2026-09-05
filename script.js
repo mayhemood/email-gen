@@ -551,3 +551,14 @@ setInterval(() => {
 $("saveOrder").addEventListener("click", () => {
   localStorage.removeItem("dayyhuDraft");
 });
+
+const trackingNumber = document
+    .getElementById("pTracking")
+    .textContent
+    .trim();
+
+  const trackingLink =
+    "https://pk.leopardscourier.com/tracking?cn_number=" +
+    encodeURIComponent(trackingNumber);
+
+  document.getElementById("pTrackingLink").href = trackingLink;
