@@ -156,7 +156,13 @@ function updatePreview() {
 
   $("pOrderDate").innerText = $("orderDate").value || "";
 
-  $("pTracking").innerText = $("trackingNumber").value || "";
+  const trackingNumber = $("trackingNumber").value.trim();
+
+$("pTracking").innerText = trackingNumber;
+
+$("pTrackingLink").href =
+  "https://pk.leopardscourier.com/tracking?cn_number=" +
+  encodeURIComponent(trackingNumber);
 
   $("pAddress").innerText = $("shippingAddress").value || "";
 
